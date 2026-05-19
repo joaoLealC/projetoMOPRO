@@ -16,5 +16,6 @@ public class Main {
         //a tua mae e muito bonita........
         // ola beatriz vai te foder jdsnfsjgejhletle4ihuahebgeh
         //o chico é um chud nojento
+        // ola coleguinhas A PUTA Q PARIU DA BEATRIZ ESTA DE NOVO ATRASADA PQP FODAD SE
     }
 }
