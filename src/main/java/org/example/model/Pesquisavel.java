@@ -1,5 +1,5 @@
 package org.example.model;
 
 public interface Pesquisavel {
-    boolean correspondePesquisa(String texto);
+    boolean correspondePesquisa(String pesquisa);
 }
