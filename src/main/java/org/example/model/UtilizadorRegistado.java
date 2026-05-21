@@ -20,5 +20,11 @@ public abstract class UtilizadorRegistado{
         return nome + " <" + email + ">";
     }
 
-    public boolean temNome(String username) { return username.equals(nome); }
+    public boolean temNome(String username) {
+        return username.equals(nome);
+    }
+
+    public String getNome() {
+        return this.nome; // Substitui pelo nome da tua variável se for diferente
+    }
 }

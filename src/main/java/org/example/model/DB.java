@@ -177,6 +177,51 @@ public class DB {
         return sb.toString();
     }
 
+    public Filme getFilme(String titulo, int ano) {
+        return pesquisaFilme(titulo, ano); // Reaproveita o teu método private existente!
+    }
+
+    // 2. Pesquisa parcial que devolve uma LISTA de filmes encontrados (Requisito do Menu)
+    public ArrayList<Filme> pesquisarFilmesPorTitulo(String termo) {
+        ArrayList<Filme> resultados = new ArrayList<>();
+        for (Filme f : lstFilmes) {
+            // Se o título do filme contiver o termo digitado (ignorando maiúsculas/minúsculas)
+            if (f.getTitulo().toLowerCase().contains(termo.toLowerCase())) {
+                resultados.add(f);
+            }
+        }
+        return resultados;
+    }
+
+    // 3. Pesquisa parcial que devolve uma LISTA de séries encontradas (Requisito do Menu)
+    public ArrayList<Serie> pesquisarSeriesPorTitulo(String termo) {
+        ArrayList<Serie> resultados = new ArrayList<>();
+        for (Serie s : lstSeries) {
+            if (s.getTitulo().toLowerCase().contains(termo.toLowerCase())) {
+                resultados.add(s);
+            }
+        }
+        return resultados;
+    }
+
+    public void listarFilmesPorNome() {
+        System.out.println(listarFilmes()); // Reaproveita o teu método listarFilmes() existente!
+    }
+
+    public void listarFilmesPorClassificacao() {
+        if (lstFilmes.isEmpty()) {
+            System.out.println("Não existem filmes registados no sistema.");
+            return;
+        }
+
+        ArrayList<Filme> ordenada = new ArrayList<>(lstFilmes);
+
+        System.out.println("\n--- FILMES POR CLASSIFICAÇÃO ---");
+        for (Filme f : ordenada) {
+            System.out.println("- " + f.getTitulo() + " (" + f.getAno() + ")");
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("=== Estado atual da DB ===\n");

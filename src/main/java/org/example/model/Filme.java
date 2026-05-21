@@ -8,6 +8,10 @@ public class Filme extends Recurso implements MarcavelComoVisto {
     private List<Ator> atores;
     private boolean visto;
 
+    // --- APENAS ADICIONAMOS ESTAS DUAS LISTAS QUE FALTAVAM ---
+    private List<Integer> classificacoes = new ArrayList<>();
+    private List<String> comentarios = new ArrayList<>();
+
     public Filme(String titulo, int ano, int duracaoMinutos) {
         super(titulo, ano);
         this.duracaoMinutos = duracaoMinutos;
@@ -32,6 +36,24 @@ public class Filme extends Recurso implements MarcavelComoVisto {
         return visto;
     }
 
+    // --- APENAS ACRESCENTAMOS ESTES MÉTODOS NO FIM PARA O MENU UTILIZAR ---
+
+    public int getDuracao() {
+        return this.duracaoMinutos;
+    }
+
+    public List<String> getComentarios() {
+        return this.comentarios;
+    }
+
+    public void adicionarClassificacao(int nota) throws classificacaoInvalidaExcecao {
+        if (nota < 1 || nota > 10) {
+            throw new classificacaoInvalidaExcecao("A classificação deve ser entre 1 e 10!");
+        }
+        this.classificacoes.add(nota);
+    }
+
+    // O teu método original continua aqui intocado:
     @Override
     public String toString() {
         return "Filme: " + super.toString() + " - " + duracaoMinutos + " min | Visto: " + (visto ? "Sim" : "Não");

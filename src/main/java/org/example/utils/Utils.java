@@ -66,4 +66,29 @@ public class Utils {
         return strConfirma.equalsIgnoreCase("s");
     }
 
+    public static String lerStringSegura(java.util.Scanner scanner, String mensagem) {
+        while (true) {
+            String input = readLineFromConsole(mensagem);
+            if (input != null && !input.trim().isEmpty()) {
+                return input.trim();
+            }
+            System.out.println("[Erro] O campo não pode ficar vazio.");
+        }
+    }
+
+    // Reaproveita o teu método 'readIntFromConsole' para o menu
+    public static int lerInteiroSeguro(java.util.Scanner scanner, String mensagem) {
+        return readIntFromConsole(mensagem);
+    }
+
+    // Lê um inteiro e garante que ele está dentro dos limites das opções do menu ou notas (1 a 10)
+    public static int lerInteiroNoIntervalo(java.util.Scanner scanner, String mensagem, int min, int max) {
+        while (true) {
+            int valor = readIntFromConsole(mensagem);
+            if (valor >= min && valor <= max) {
+                return valor;
+            }
+            System.out.println("[Erro] O número inserido deve estar entre " + min + " e " + max + ".");
+        }
+    }
 }
