@@ -44,10 +44,7 @@ public class Episodio implements MarcavelComoVisto, Serializable {
     public ArrayList<Integer> getClassificacoes() { return classificacoes; }
     public ArrayList<String> getComentarios() { return comentarios; }
 
-    /**
-     * Associa um novo ator ao episódio.
-     * @param ator O ator a adicionar.
-     */
+
     public void adicionarAtor(Ator ator) {
         if (ator != null && !atores.contains(ator)) {
             atores.add(ator);

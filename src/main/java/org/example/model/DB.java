@@ -19,6 +19,19 @@ public class DB {
         this.lstSeries = new ArrayList<>();
     }
 
+    public List<UtilizadorRegistado> getLstUtilizadores() {
+        return this.lstUtilizadores;
+    }
+    public List<Ator> getLstAtores() {
+        return this.lstAtores;
+    }
+    public List<Filme> getLstFilmes() {
+        return this.lstFilmes;
+    }
+    public List<Serie> getLstSeries() {
+        return this.lstSeries;
+    }
+
     public void adicionarAtor(Ator a) {
         this.lstAtores.add(a);
     }
@@ -113,6 +126,8 @@ public class DB {
         return null;
     }
 
+
+
     // --- Autenticação ---
 
     public UtilizadorRegistado login(String username, String password) {
@@ -206,17 +221,32 @@ public class DB {
 
     // Devolve a lista ordenada alfabeticamente para o Menu imprimir
     public ArrayList<Filme> listarFilmesPorNome() {
+        if (lstFilmes.isEmpty()) {
+            System.out.println("Não existem filmes registados no sistema.");
+            return null;
+        }
         ArrayList<Filme> copia = new ArrayList<>(lstFilmes);
-        // Ordena a cópia por ordem alfabética do título
         copia.sort((f1, f2) -> f1.getTitulo().compareToIgnoreCase(f2.getTitulo()));
+
+        System.out.println("\n--- FILMES POR ORDEM ALFABÉTICA ---");
+        for (Filme f : copia) {
+            System.out.println("- " + f.getTitulo() + " (" + f.getAno() + ")");
+        }
         return copia;
     }
 
     // Devolve a lista ordenada por nota para o Menu imprimir
     public ArrayList<Filme> listarFilmesPorClassificacao() {
+        if (lstFilmes.isEmpty()) {
+            System.out.println("Não existem filmes registados no sistema.");
+            return null;
+        }
         ArrayList<Filme> copia = new ArrayList<>(lstFilmes);
-        // Ordena por nota mais alta primeiro (Decrescente) usando o método que adicionaste acima
-        copia.sort((f1, f2) -> Double.compare(f2.getClassificacaoMedia(), f1.getClassificacaoMedia()));
+
+        System.out.println("\n--- FILMES POR CLASSIFICAÇÃO MÉDIA ---");
+        for (Filme f : copia) {
+            System.out.println("- " + f.getTitulo() + " (" + f.getAno() + ")");
+        }
         return copia;
     }
 

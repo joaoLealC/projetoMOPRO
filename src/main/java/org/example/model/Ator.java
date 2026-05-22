@@ -11,10 +11,23 @@ public class Ator {
         this.dataNascimento = dataNascimento;
     }
 
+    public String getNome() {
+        return this.nome;
+    }
+
+    public Data getDataNascimento() {
+        return this.dataNascimento;
+    }
+
     @Override
     public String toString() {
         return nome + " [" + dataNascimento + "]";
     }
 
-    public boolean temNome(String nome) {return this.nome.equals(nome);}
+    public boolean temNome(String nome) {
+        return this.nome.equals(nome);
+    }
+
+
 }
+

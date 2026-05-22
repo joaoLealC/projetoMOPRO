@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Filme extends Recurso implements MarcavelComoVisto {
-    private int duracaoMinutos;
+    private final int duracaoMinutos;
     private List<Ator> atores;
     private boolean visto;
 
@@ -36,14 +36,24 @@ public class Filme extends Recurso implements MarcavelComoVisto {
         return visto;
     }
 
+
+
     // --- APENAS ACRESCENTAMOS ESTES MÉTODOS NO FIM PARA O MENU UTILIZAR ---
 
     public int getDuracao() {
         return this.duracaoMinutos;
     }
 
+    public List<Ator> getAtores() {
+        return this.atores;
+    }
+
     public List<String> getComentarios() {
         return this.comentarios;
+    }
+
+    public List<Integer> getClassificacoes() {
+        return this.classificacoes;
     }
 
     public void adicionarClassificacao(int nota) throws classificacaoInvalidaExcecao {

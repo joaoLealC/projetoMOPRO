@@ -4,7 +4,7 @@ import org.example.model.*;
 
 public class Main {
     public static void main(String[] args) {
-        DB imdb = null;
+        DB imdb = new DB("IMDB");
         MenuFonteInfo menuFonteInfo = new MenuFonteInfo(imdb);
         menuFonteInfo.run();
     }
