@@ -22,9 +22,10 @@ public class MenuUtilizadorRegistado {
             System.out.println("\n#################################################");
             System.out.println("#         MENU - UTILIZADOR REGISTADO           #");
             System.out.println("#################################################");
+            // Supondo que o Espectador herda um método getNome() do UtilizadorRegistado
             System.out.println("#  Olá, " + utilizador.getNome());
             System.out.println("#-----------------------------------------------#");
-            System.out.println("#  1. Pesquisar e Ver Detalhes de Filme/Série  #");
+            System.out.println("#  1. Pesquisar e Ver Detalhes de Filme/Série   #");
             System.out.println("#  2. Marcar Conteúdo como Visto                #");
             System.out.println("#  3. Classificar Conteúdo (1 a 10)             #");
             System.out.println("#  4. Deixar Comentário                         #");
@@ -33,7 +34,6 @@ public class MenuUtilizadorRegistado {
             System.out.println("#  0. Voltar (Logout)                           #");
             System.out.println("#################################################");
 
-            // Usando o método seguro que criámos na Utils
             opcao = Utils.lerInteiroNoIntervalo(scanner, "Escolha uma opção: ", 0, 5);
 
             switch (opcao) {
@@ -59,8 +59,6 @@ public class MenuUtilizadorRegistado {
         } while (opcao != 0);
     }
 
-    // --- MÉTODOS AUXILIARES PARA CADA FUNCIONALIDADE DA UI ---
-
     private void menuPesquisarRecurso() {
         System.out.println("\n--- PESQUISAR FILME / SÉRIE ---");
         String termo = Utils.lerStringSegura(scanner, "Introduza o título a pesquisar: ");
@@ -69,11 +67,13 @@ public class MenuUtilizadorRegistado {
         ArrayList<Serie> series = imdb.pesquisarSeriesPorTitulo(termo);
 
         System.out.println("\n--- Filmes Encontrados ---");
+        if (filmes.isEmpty()) System.out.println("Nenhum filme encontrado.");
         for (Filme f : filmes) {
             System.out.println("- " + f.getTitulo() + " (" + f.getAno() + ") | Duração: " + f.getDuracao() + " min");
         }
 
         System.out.println("\n--- Séries Encontradas ---");
+        if (series.isEmpty()) System.out.println("Nenhuma série encontrada.");
         for (Serie s : series) {
             System.out.println("- " + s.getTitulo() + " (" + s.getAno() + ")");
         }
@@ -84,10 +84,9 @@ public class MenuUtilizadorRegistado {
         String titulo = Utils.lerStringSegura(scanner, "Título do conteúdo: ");
         int ano = Utils.lerInteiroSeguro(scanner, "Ano de lançamento: ");
 
-        // Exemplo procurando primeiro nos filmes (Ajusta à lógica da tua DB)
-        Filme f = imdb.getFilme(titulo, ano); // Certifica-te que tens este getter na DB
+        Filme f = imdb.getFilme(titulo, ano);
         if (f != null) {
-            f.marcarComoVisto(); // Método da interface MarcavelComoVisto que corrigimos
+            f.marcarComoVisto();
             System.out.println("✔ Filme '" + f.getTitulo() + "' marcado como visto!");
             return;
         }
@@ -102,7 +101,6 @@ public class MenuUtilizadorRegistado {
 
         Filme f = imdb.getFilme(titulo, ano);
         if (f != null) {
-            // Regra do enunciado: Validar se já viu antes de classificar
             if (!f.estaVisto()) {
                 System.out.println("[Erro] Só pode classificar conteúdos que já marcou como vistos!");
                 return;
@@ -111,7 +109,6 @@ public class MenuUtilizadorRegistado {
             int nota = Utils.lerInteiroNoIntervalo(scanner, "Classificação (1 a 10): ", 1, 10);
 
             try {
-                // Supondo que o método adicionarClassificacao lança a vossa 'classificacaoInvalidaExcecao'
                 f.adicionarClassificacao(nota);
                 System.out.println("✔ Classificação adicionada com sucesso!");
             } catch (classificacaoInvalidaExcecao e) {
@@ -144,12 +141,18 @@ public class MenuUtilizadorRegistado {
         int escolha = Utils.lerInteiroNoIntervalo(scanner, "Escolha: ", 1, 2);
 
         if (escolha == 1) {
-            // Chamar o motor de ordenação alfabética da DB
-            imdb.listarFilmesPorNome();
+            ArrayList<Filme> ordenados = imdb.listarFilmesPorNome();
+            System.out.println("\n-- Filmes Ordenados por Título --");
+            for(Filme f : ordenados) {
+                System.out.println(" > " + f.getTitulo() + " (" + f.getAno() + ")");
+            }
         } else {
-            // Chamar o motor de ordenação por nota da DB
-            imdb.listarFilmesPorClassificacao();
+            ArrayList<Filme> ordenados = imdb.listarFilmesPorClassificacao();
+            System.out.println("\n-- Filmes Ordenados por Classificação Média --");
+            for(Filme f : ordenados) {
+                // Imprime com a classificação formatada (ex: 8.5/10)
+                System.out.printf(" > %s (%d) | Nota: %.1f/10\n", f.getTitulo(), f.getAno(), f.getClassificacaoMedia());
+            }
         }
     }
 }
-

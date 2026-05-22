@@ -52,7 +52,15 @@ public class Filme extends Recurso implements MarcavelComoVisto {
         }
         this.classificacoes.add(nota);
     }
-
+    // Método obrigatório para a listagem ordenada funcionar
+    public double getClassificacaoMedia() {
+        if (classificacoes.isEmpty()) return 0.0;
+        int soma = 0;
+        for (int nota : classificacoes) {
+            soma += nota;
+        }
+        return (double) soma / classificacoes.size();
+    }
     // O teu método original continua aqui intocado:
     @Override
     public String toString() {

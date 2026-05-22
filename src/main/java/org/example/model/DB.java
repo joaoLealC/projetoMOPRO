@@ -204,22 +204,20 @@ public class DB {
         return resultados;
     }
 
-    public void listarFilmesPorNome() {
-        System.out.println(listarFilmes()); // Reaproveita o teu método listarFilmes() existente!
+    // Devolve a lista ordenada alfabeticamente para o Menu imprimir
+    public ArrayList<Filme> listarFilmesPorNome() {
+        ArrayList<Filme> copia = new ArrayList<>(lstFilmes);
+        // Ordena a cópia por ordem alfabética do título
+        copia.sort((f1, f2) -> f1.getTitulo().compareToIgnoreCase(f2.getTitulo()));
+        return copia;
     }
 
-    public void listarFilmesPorClassificacao() {
-        if (lstFilmes.isEmpty()) {
-            System.out.println("Não existem filmes registados no sistema.");
-            return;
-        }
-
-        ArrayList<Filme> ordenada = new ArrayList<>(lstFilmes);
-
-        System.out.println("\n--- FILMES POR CLASSIFICAÇÃO ---");
-        for (Filme f : ordenada) {
-            System.out.println("- " + f.getTitulo() + " (" + f.getAno() + ")");
-        }
+    // Devolve a lista ordenada por nota para o Menu imprimir
+    public ArrayList<Filme> listarFilmesPorClassificacao() {
+        ArrayList<Filme> copia = new ArrayList<>(lstFilmes);
+        // Ordena por nota mais alta primeiro (Decrescente) usando o método que adicionaste acima
+        copia.sort((f1, f2) -> Double.compare(f2.getClassificacaoMedia(), f1.getClassificacaoMedia()));
+        return copia;
     }
 
     @Override
