@@ -2,85 +2,76 @@ package org.example.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Representa um episódio individual de uma temporada.
+ */
 public class Episodio implements MarcavelComoVisto, Serializable {
-
     private static final long serialVersionUID = 1L;
 
     private int numero;
     private String titulo;
-    private int duracao; // em minutos
-    private boolean visto;
-    private ArrayList<Ator> atores; // [cite: 19, 43]
-    private ArrayList<Integer> classificacoes; // [cite: 19, 49]
-    private ArrayList<String> comentarios; // [cite: 19, 50]
+    private int duracao;
 
-    /**
-     * Construtor para criar um Episódio.
-     * * @param numero         O número do episódio na temporada.
-     * @param titulo         O título do episódio.
-     * @param duracao        A duração em minutos.
-     * @param atorInicial    O primeiro ator associado (garante a regra de negócio).
-     */
-    public Episodio(int numero, String titulo, int duracao, Ator atorInicial) {
+    // FIX 2: Episódio agora tem as suas próprias classificações e comentários
+    private List<Classificacao> classificacoes;
+    private List<Comentario> comentarios;
+
+    public Episodio(int numero, String titulo, int duracao) {
         this.numero = numero;
         this.titulo = titulo;
         this.duracao = duracao;
-        this.visto = false;
-        this.atores = new ArrayList<>();
         this.classificacoes = new ArrayList<>();
         this.comentarios = new ArrayList<>();
-
-        // Garante que o episódio nasce com pelo menos um ator associado
-        if (atorInicial != null) {
-            this.atores.add(atorInicial);
-        }
     }
 
     public int getNumero() { return numero; }
     public String getTitulo() { return titulo; }
     public int getDuracao() { return duracao; }
-    public ArrayList<Ator> getAtores() { return atores; }
-    public ArrayList<Integer> getClassificacoes() { return classificacoes; }
-    public ArrayList<String> getComentarios() { return comentarios; }
-
-
-    public void adicionarAtor(Ator ator) {
-        if (ator != null && !atores.contains(ator)) {
-            atores.add(ator);
-        }
-    }
+    public List<Classificacao> getClassificacoes() { return classificacoes; }
+    public List<Comentario> getComentarios() { return comentarios; }
 
     /**
-     * Adiciona uma classificação ao episódio (entre 1 e 10).
-     * @param estrelas Nota dada de 1 a 10.
+     * Adiciona uma classificação ao episódio.
+     * FIX 3 + 4: Valida se já classificou e se já viu o episódio.
      */
-    public void adicionarClassificacao(int estrelas) {
-        if (estrelas >= 1 && estrelas <= 10) { //
-            classificacoes.add(estrelas);
+    public void adicionarClassificacao(Espectador espectador, int estrelas) throws Exception {
+        // FIX 4: Verificar se já viu
+        if (!espectador.getEpisodiosVistos().contains(this)) {
+            throw new Exception("Só pode classificar episódios que já viu!");
         }
+        // FIX 3: Verificar se já classificou
+        for (Classificacao c : classificacoes) {
+            if (c.getAutor().equals(espectador)) {
+                throw new Exception("Já classificou este episódio anteriormente!");
+            }
+        }
+        classificacoes.add(new Classificacao(espectador, estrelas));
     }
 
-    /**
-     * Adiciona um comentário ao episódio.
-     * @param comentario O texto do comentário.
-     */
-    public void adicionarComentario(String comentario) {
-        if (comentario != null && !comentario.trim().isEmpty()) {
-            comentarios.add(comentario);
-        }
+    public void adicionarComentario(Comentario c) {
+        this.comentarios.add(c);
     }
 
-    // --- Implementação da Interface MarcavelComoVisto ---
-
-    @Override
-    public void marcarComoVisto() {
-        this.visto = true; // [cite: 47]
+    public double calcularClassificacaoMedia() {
+        if (classificacoes.isEmpty()) return 0.0;
+        double soma = 0;
+        for (Classificacao c : classificacoes) soma += c.getEstrelas();
+        return soma / classificacoes.size();
     }
 
     @Override
-    public boolean estaVisto() {
-        return this.visto;
+    public boolean isVisto(Espectador espectador) {
+        return espectador.getEpisodiosVistos().contains(this);
+    }
+
+    @Override
+    public void marcarComoVisto(Espectador espectador) throws Exception {
+        if (espectador.getEpisodiosVistos().contains(this)) {
+            throw new Exception("O espetador já viu este episódio!");
+        }
+        espectador.getEpisodiosVistos().add(this);
     }
 
     @Override

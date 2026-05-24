@@ -1,79 +1,55 @@
 package org.example.model;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * Representa um Filme do sistema.
+ */
+public class Filme extends RecursoVisual implements MarcavelComoVisto {
+    private static final long serialVersionUID = 1L;
+    private int duracao;
 
-public class Filme extends Recurso implements MarcavelComoVisto {
-    private final int duracaoMinutos;
-    private List<Ator> atores;
-    private boolean visto;
-
-    // --- APENAS ADICIONAMOS ESTAS DUAS LISTAS QUE FALTAVAM ---
-    private List<Integer> classificacoes = new ArrayList<>();
-    private List<String> comentarios = new ArrayList<>();
-
-    public Filme(String titulo, int ano, int duracaoMinutos) {
+    public Filme(String titulo, int ano, int duracao) {
         super(titulo, ano);
-        this.duracaoMinutos = duracaoMinutos;
-        this.atores = new ArrayList<>();
-        this.visto = false;
-    }
-
-    public void adicionarAtor(Ator ator) {
-        if (!atores.contains(ator)) {
-            atores.add(ator);
-        }
-    }
-
-    // Resolve os erros da interface MarcavelComoVisto
-    @Override
-    public void marcarComoVisto() {
-        this.visto = true;
+        this.duracao = duracao;
     }
 
     @Override
-    public boolean estaVisto() {
-        return visto;
-    }
-
-
-
-    // --- APENAS ACRESCENTAMOS ESTES MÉTODOS NO FIM PARA O MENU UTILIZAR ---
-
     public int getDuracao() {
-        return this.duracaoMinutos;
+        return this.duracao;
     }
 
-    public List<Ator> getAtores() {
-        return this.atores;
-    }
-
-    public List<String> getComentarios() {
-        return this.comentarios;
-    }
-
-    public List<Integer> getClassificacoes() {
-        return this.classificacoes;
-    }
-
-    public void adicionarClassificacao(int nota) throws classificacaoInvalidaExcecao {
-        if (nota < 1 || nota > 10) {
-            throw new classificacaoInvalidaExcecao("A classificação deve ser entre 1 e 10!");
-        }
-        this.classificacoes.add(nota);
-    }
-    // Método obrigatório para a listagem ordenada funcionar
-    public double getClassificacaoMedia() {
-        if (classificacoes.isEmpty()) return 0.0;
-        int soma = 0;
-        for (int nota : classificacoes) {
-            soma += nota;
-        }
-        return (double) soma / classificacoes.size();
-    }
-    // O teu método original continua aqui intocado:
     @Override
-    public String toString() {
-        return "Filme: " + super.toString() + " - " + duracaoMinutos + " min | Visto: " + (visto ? "Sim" : "Não");
+    public double calcularClassificacaoMedia() {
+        if (getClassificacoes().isEmpty()) return 0.0;
+        double soma = 0;
+        for (Classificacao c : getClassificacoes()) soma += c.getEstrelas();
+        return soma / getClassificacoes().size();
+    }
+
+    @Override
+    public String getCategoriaClassificacao() {
+        double media = calcularClassificacaoMedia();
+        if (getClassificacoes().isEmpty()) return "Sem classificações";
+        if (media < 4) return "Fraco";
+        if (media <= 8) return "Médio";
+        return "Bom";
+    }
+
+    @Override
+    public boolean isVisto(Espectador espectador) {
+        return espectador.getFilmesVistos().contains(this);
+    }
+
+    // FIX 4: implementação do método abstrato de RecursoVisual
+    @Override
+    public boolean isVistoPorEspectador(Espectador espectador) {
+        return espectador.getFilmesVistos().contains(this);
+    }
+
+    @Override
+    public void marcarComoVisto(Espectador espectador) throws Exception {
+        if (espectador.getFilmesVistos().contains(this)) {
+            throw new Exception("O espetador já viu este filme!");
+        }
+        espectador.getFilmesVistos().add(this);
     }
 }
