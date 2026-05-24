@@ -4,6 +4,9 @@ import org.example.model.*;
 import org.example.utils.Data;
 import org.example.utils.Utils;
 
+/**
+ * Menu inicial que permite carregar dados demo ou de ficheiro.
+ */
 public class MenuFonteInfo {
     private DB imdb;
     private String opcao;
@@ -28,39 +31,46 @@ public class MenuFonteInfo {
             System.out.println();
 
             opcao = Utils.readLineFromConsole("Escolha uma opção: ");
+
             switch (opcao) {
                 case "1":
                     imdb = construir();
                     System.out.println("Carregada DB com dados demo");
-                    System.out.println("----------------------------");
-                    System.out.println("| CREDENCIAIS DEMO:        |");
-                    System.out.println("----------------------------");
-                    System.out.println("| -> Admin:                |");
-                    System.out.println("|    - admin/admin         |");
-                    System.out.println("| -> Espectadores:         |");
-                    System.out.println("|    - ana/abc             |");
-                    System.out.println("|    - pedro/qwerty        |");
-                    System.out.println("----------------------------");
+                    System.out.println(imdb);
+                    MenuInicial menuInicial = new MenuInicial(imdb);
+                    menuInicial.run();
                     break;
+
                 case "2":
-                    // Completar
+                    imdb = DB.carregarFicheiro("imdb_data.dat");
+                    System.out.println(imdb);
+                    MenuInicial menuInicialFile = new MenuInicial(imdb);
+                    menuInicialFile.run();
                     break;
-                // Completar
+
+                case "0":
+                    if (imdb != null) {
+                        imdb.gravarFicheiro();
+                    }
+                    System.out.println("A sair... Até à próxima!");
+                    break;
+
+                default:
+                    System.out.println("Opção inválida");
+                    break;
             }
-            if (imdb != null) {
-                System.out.println(imdb);
-                MenuInicial uiMenu = new MenuInicial(imdb);
-                uiMenu.run();
-            }
-        } while (!opcao.equals("0"));
+        }
+        while (!opcao.equals("0"));
     }
 
     private static DB construir() {
-        // Construção da empresa
-        DB imdb = new DB("www.imdb.com");
+        DB imdb = new DB("imdb_data.dat");
 
-        // Utilizadores
-        Admin admin = criarAdmin(imdb, "admin@example.com", "admin", "admin");
+        // Administradores
+        Admin admin = new Admin("admin@example.com", "admin", "admin");
+        imdb.adicionarUtilizador(admin);
+
+        // Espetadores
         Espectador ana = criarEspectador("ana@example.com", "ana", "abc", imdb);
         Espectador pedro = criarEspectador("pedro@example.com", "pedro", "qwerty", imdb);
 
@@ -71,7 +81,51 @@ public class MenuFonteInfo {
         Ator jonathanPrice = criarAtor(imdb, "Jonathan Price", new Data(1947, 6, 1));
         Ator cillianMurphy = criarAtor(imdb, "Cillian Murphy", new Data(1976, 5, 25));
 
-        // Completar
+        System.out.println("\n--- A criar Filmes e Séries (Dados Demo) ---");
+
+        try {
+            // Filme: Inception
+            Filme filme1 = new Filme("Inception", 2010, 148);
+            filme1.adicionarGenero(Genero.FICCAO);
+            filme1.adicionarGenero(Genero.ACAO);
+            filme1.adicionarAtor(tomHardy);
+            filme1.adicionarAtor(cillianMurphy);
+            filme1.adicionarClassificacao(new Classificacao(ana, 9));
+            filme1.adicionarClassificacao(new Classificacao(pedro, 10));
+            filme1.adicionarComentario(new Comentario(ana, "Brilhante! Um autêntico quebra-cabeças."));
+            imdb.adicionarRecurso(filme1);
+
+            // Filme: The Dark Knight
+            Filme filme2 = new Filme("The Dark Knight", 2008, 152);
+            filme2.adicionarGenero(Genero.ACAO);
+            filme2.adicionarGenero(Genero.DRAMA);
+            filme2.adicionarAtor(cillianMurphy);
+            filme2.adicionarClassificacao(new Classificacao(pedro, 8));
+            imdb.adicionarRecurso(filme2);
+
+            // Série: Peaky Blinders
+            Serie serie1 = new Serie("Peaky Blinders", 2013);
+            serie1.adicionarGenero(Genero.DRAMA);
+            serie1.adicionarAtor(cillianMurphy);
+            serie1.adicionarAtor(tomHardy);
+
+            Temporada t1 = new Temporada(1);
+            t1.adicionarEpisodio(new Episodio(1, "Episode 1", 55));
+            t1.adicionarEpisodio(new Episodio(2, "Episode 2", 58));
+            serie1.adicionarTemporada(t1);
+
+            Temporada t2 = new Temporada(2);
+            t2.adicionarEpisodio(new Episodio(1, "Episode 1", 59));
+            serie1.adicionarTemporada(t2);
+
+            serie1.adicionarClassificacao(new Classificacao(ana, 9));
+            imdb.adicionarRecurso(serie1);
+
+            System.out.println("Recursos criados com sucesso!");
+
+        } catch (Exception e) {
+            System.out.println("Erro nos dados demo: " + e.getMessage());
+        }
 
         return imdb;
     }
@@ -88,12 +142,5 @@ public class MenuFonteInfo {
         imdb.adicionarUtilizador(espectador);
         System.out.println("Espectador '" + nome + "' criado com sucesso");
         return espectador;
-    }
-
-    private static Admin criarAdmin(DB imdb, String email, String nome, String password) {
-        Admin admin = new Admin(email, nome, password);
-        imdb.adicionarUtilizador(admin);
-        System.out.println("Administrador '" + nome + "' criado com sucesso");
-        return admin;
     }
 }

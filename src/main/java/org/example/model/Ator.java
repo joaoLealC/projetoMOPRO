@@ -28,6 +28,5 @@ public class Ator {
         return this.nome.equals(nome);
     }
 
-
 }
 

@@ -24,7 +24,7 @@ public class MenuInicial {
             System.out.println("#  1. Ver sem login                             #");
             System.out.println("#  2. Login                                     #");
             System.out.println("#                                               #");
-            System.out.println("#  0. Voltar                                    #");
+            System.out.println("#  0. Voltar (e gravar dados)                   #");
             System.out.println("#                                               #");
             System.out.println("#################################################");
             System.out.println();
@@ -49,18 +49,25 @@ public class MenuInicial {
                             MenuAdministrador ui = new MenuAdministrador(imdb);
                             ui.run();
                         } else if (ur instanceof Espectador) {
-                            System.out.println("User");
                             MenuUtilizadorRegistado ui = new MenuUtilizadorRegistado(imdb, (Espectador) ur);
                             ui.run();
                         }
+                        // Grava após cada sessão de login, para não perder dados
+                        imdb.gravarFicheiro();
                     } catch (Exception e) {
                         System.out.println("ERRO: " + e.getMessage());
                     }
+                    // Sai do loop while após login bem-sucedido
+                    break;
                 }
-            } else if (!opcao.equals("0")) {
+            } else if (opcao.equals("0")) {
+                // FIX 1: Grava sempre ao sair do menu principal
+                imdb.gravarFicheiro();
+            } else {
                 System.out.println("Opção inválida");
             }
         }
         while (!opcao.equals("0"));
     }
 }
+

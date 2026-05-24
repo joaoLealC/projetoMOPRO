@@ -1,10 +1,13 @@
 package org.example.utils;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mdm
  */
-public class Data {
+public class Data implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * O ano da data.
