@@ -2,9 +2,7 @@ package org.example.model;
 
 import java.io.Serializable;
 
-/**
- * Classe abstrata que representa um utilizador registado no sistema.
- */
+
 public abstract class UtilizadorRegistado implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -12,12 +10,7 @@ public abstract class UtilizadorRegistado implements Serializable {
     private String nome;
     private String password;
 
-    /**
-     * Constrói um UtilizadorRegistado com email, nome e password.
-     * @param email    email único do utilizador
-     * @param nome     nome do utilizador
-     * @param password palavra-passe de acesso
-     */
+
     public UtilizadorRegistado(String email, String nome, String password) {
         this.email = email;
         this.nome = nome;

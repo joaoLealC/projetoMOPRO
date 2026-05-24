@@ -3,9 +3,6 @@ package org.example.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Classe que representa um utilizador do tipo Espectador na plataforma.
- */
 public class Espectador extends UtilizadorRegistado {
 
     private List<RecursoVisual> listaPessoal;
@@ -39,10 +36,6 @@ public class Espectador extends UtilizadorRegistado {
         this.listaPessoal.remove(recurso);
     }
 
-    /**
-     * FIX 3: equals necessário para que "c.getAutor().equals(espectador)" funcione
-     * corretamente na verificação de classificação duplicada.
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

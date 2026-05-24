@@ -4,9 +4,6 @@ import org.example.model.*;
 import org.example.utils.Utils;
 import java.util.List;
 
-/**
- * Menu responsável por apresentar as listagens ordenadas do sistema (Categoria 5).
- */
 public class MenuListagens {
     private DB imdb;
     private String opcao;

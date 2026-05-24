@@ -4,10 +4,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Representa a Base de Dados em memória do sistema.
- * Implementa Serializable para permitir guardar e carregar todo o estado da aplicação.
- */
 public class DB implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -16,10 +12,6 @@ public class DB implements Serializable {
     private List<Ator> lstAtores;
     private List<RecursoVisual> lstRecursos;
 
-    /**
-     * Constrói uma nova DB com o caminho do ficheiro de persistência.
-     * @param url caminho do ficheiro de dados
-     */
     public DB(String url) {
         this.url = url;
         this.lstAtores = new ArrayList<>();
@@ -27,7 +19,7 @@ public class DB implements Serializable {
         this.lstRecursos = new ArrayList<>();
     }
 
-    // --- Gestão de Atores ---
+    //Gestão de Atores
 
     public void adicionarAtor(Ator a) {
         this.lstAtores.add(a);
@@ -48,7 +40,7 @@ public class DB implements Serializable {
         return this.lstAtores;
     }
 
-    // --- Gestão de Utilizadores ---
+    // Gestão de Utilizadores
 
     public void adicionarUtilizador(UtilizadorRegistado u) {
         this.lstUtilizadores.add(u);
@@ -69,11 +61,6 @@ public class DB implements Serializable {
 
     // --- Gestão de Recursos ---
 
-    /**
-     * Adiciona um recurso visual à base de dados.
-     * Regra: não podem existir duplicados com o mesmo título e ano.
-     * @throws Exception se já existir um recurso com o mesmo título e ano
-     */
     public void adicionarRecurso(RecursoVisual r) throws Exception {
         for (RecursoVisual rv : lstRecursos) {
             if (rv.getTitulo().equalsIgnoreCase(r.getTitulo())
@@ -93,9 +80,8 @@ public class DB implements Serializable {
         return lstRecursos;
     }
 
-    /**
-     * Pesquisa recursos cujo título contenha o texto especificado.
-     */
+    //Pesquisa recursos cujo título contenha o texto especificado.
+
     public List<RecursoVisual> pesquisaRecursos(String titulo) {
         List<RecursoVisual> resultados = new ArrayList<>();
         for (RecursoVisual rv : lstRecursos) {
@@ -154,9 +140,7 @@ public class DB implements Serializable {
 
     // --- Serialização ---
 
-    /**
-     * Grava o estado completo da DB num ficheiro binário.
-     */
+
     public void gravarFicheiro() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(this.url))) {
             oos.writeObject(this);
@@ -166,9 +150,8 @@ public class DB implements Serializable {
         }
     }
 
-    /**
-     * Carrega o estado da DB a partir de um ficheiro binário.
-     */
+
+
     public static DB carregarFicheiro(String urlFicheiro) {
         File f = new File(urlFicheiro);
         if (!f.exists()) {
@@ -195,28 +178,28 @@ public class DB implements Serializable {
         return filmes;
     }
 
-    /** Lista filmes ordenados por título (A-Z). */
+    //Lista filmes ordenados por título (A-Z).
     public List<Filme> listarFilmesPorTitulo() {
         List<Filme> filmes = obterApenasFilmes();
         filmes.sort((f1, f2) -> f1.getTitulo().compareToIgnoreCase(f2.getTitulo()));
         return filmes;
     }
 
-    /** Lista filmes ordenados por classificação média (maior para menor). */
+    // Lista filmes ordenados por classificação média (maior para menor).
     public List<Filme> listarFilmesPorClassificacaoMedia() {
         List<Filme> filmes = obterApenasFilmes();
         filmes.sort((f1, f2) -> Double.compare(f2.calcularClassificacaoMedia(), f1.calcularClassificacaoMedia()));
         return filmes;
     }
 
-    /** Lista atores ordenados por nome (A-Z). */
+    //Lista atores ordenados por nome (A-Z).
     public List<Ator> listarAtoresPorNome() {
         List<Ator> atores = new ArrayList<>(lstAtores);
         atores.sort((a1, a2) -> a1.getNome().compareToIgnoreCase(a2.getNome()));
         return atores;
     }
 
-    /** Conta em quantos filmes um ator participa. */
+    //Conta em quantos filmes um ator participa.
     public int contarFilmesDoAtor(Ator ator) {
         int contador = 0;
         for (Filme f : obterApenasFilmes()) {
@@ -225,14 +208,14 @@ public class DB implements Serializable {
         return contador;
     }
 
-    /** Lista atores ordenados por número de filmes (maior para menor). */
+    // Lista atores ordenados por número de filmes (maior para menor).
     public List<Ator> listarAtoresPorNumeroDeFilmes() {
         List<Ator> atores = new ArrayList<>(lstAtores);
         atores.sort((a1, a2) -> Integer.compare(contarFilmesDoAtor(a2), contarFilmesDoAtor(a1)));
         return atores;
     }
 
-    /** Lista espectadores ordenados por número de filmes vistos (maior para menor). */
+    // Lista espectadores ordenados por número de filmes vistos (maior para menor).
     public List<Espectador> listarUtilizadoresPorFilmesVistos() {
         List<Espectador> espectadores = new ArrayList<>();
         for (UtilizadorRegistado u : lstUtilizadores) {

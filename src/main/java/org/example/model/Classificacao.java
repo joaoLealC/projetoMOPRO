@@ -2,9 +2,6 @@ package org.example.model;
 
 import java.io.Serializable;
 
-/**
- * Representa uma classificação em estrelas dada por um espetador.
- */
 public class Classificacao implements Serializable {
     private static final long serialVersionUID = 1L;
     private Espectador autor;

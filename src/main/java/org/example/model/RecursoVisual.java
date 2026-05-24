@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Classe base abstrata para Filmes e Séries.
- */
 public abstract class RecursoVisual implements Pesquisavel, Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -41,23 +38,16 @@ public abstract class RecursoVisual implements Pesquisavel, Serializable {
         if (!elenco.contains(a)) elenco.add(a);
     }
 
-    /**
-     * FIX 3 + 4: Valida se o espectador já viu o conteúdo e se ainda não classificou.
-     * Usado internamente pelos dados demo (sem validação).
-     */
     public void adicionarClassificacao(Classificacao c) {
         this.classificacoes.add(c);
     }
 
-    /**
-     * Método com validações completas para uso pelo utilizador no menu.
-     */
+
     public void classificar(Espectador espectador, int estrelas) throws Exception {
-        // FIX 4: Verificar se já viu
+
         if (!isVistoPorEspectador(espectador)) {
             throw new Exception("Só pode classificar conteúdos que já viu!");
         }
-        // FIX 3: Verificar se já classificou
         for (Classificacao c : classificacoes) {
             if (c.getAutor().equals(espectador)) {
                 throw new Exception("Já classificou este conteúdo anteriormente!");
@@ -66,10 +56,6 @@ public abstract class RecursoVisual implements Pesquisavel, Serializable {
         classificacoes.add(new Classificacao(espectador, estrelas));
     }
 
-    /**
-     * Verifica se este recurso foi visto pelo espectador.
-     * Implementado diferente para Filme e Série.
-     */
     public abstract boolean isVistoPorEspectador(Espectador espectador);
 
     public void adicionarComentario(Comentario c) {

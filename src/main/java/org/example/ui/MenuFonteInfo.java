@@ -4,9 +4,6 @@ import org.example.model.*;
 import org.example.utils.Data;
 import org.example.utils.Utils;
 
-/**
- * Menu inicial que permite carregar dados demo ou de ficheiro.
- */
 public class MenuFonteInfo {
     private DB imdb;
     private String opcao;

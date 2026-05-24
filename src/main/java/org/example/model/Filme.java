@@ -1,8 +1,6 @@
 package org.example.model;
 
-/**
- * Representa um Filme do sistema.
- */
+
 public class Filme extends RecursoVisual implements MarcavelComoVisto {
     private static final long serialVersionUID = 1L;
     private int duracao;
@@ -39,7 +37,6 @@ public class Filme extends RecursoVisual implements MarcavelComoVisto {
         return espectador.getFilmesVistos().contains(this);
     }
 
-    // FIX 4: implementação do método abstrato de RecursoVisual
     @Override
     public boolean isVistoPorEspectador(Espectador espectador) {
         return espectador.getFilmesVistos().contains(this);

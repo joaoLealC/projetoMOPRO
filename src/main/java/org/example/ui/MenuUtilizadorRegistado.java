@@ -183,10 +183,7 @@ public class MenuUtilizadorRegistado {
         }
     }
 
-    /**
-     * FIX 2, 3, 4: Classificar com escolha entre filme/série ou episódio específico,
-     * com validação de "já viu" e "já classificou".
-     */
+
     private void classificarEComentar() {
         System.out.println(imdb.listarRecursos());
         String titulo = Utils.readLineFromConsole("Título do conteúdo a classificar: ");
@@ -197,7 +194,6 @@ public class MenuUtilizadorRegistado {
             return;
         }
 
-        // FIX 2: Se for série, perguntar se quer classificar a série ou um episódio
         if (rv instanceof Serie) {
             Serie s = (Serie) rv;
             System.out.println("O que pretende classificar?");
@@ -220,7 +216,7 @@ public class MenuUtilizadorRegistado {
         String textoComentario = Utils.readLineFromConsole("Escreva a sua crítica (comentário): ");
 
         try {
-            // FIX 3 + 4: usa o novo método classificar() com validações
+
             rv.classificar(utilizador, estrelas);
             rv.adicionarComentario(new Comentario(utilizador, textoComentario));
             System.out.println("Avaliação submetida com sucesso!");
@@ -229,9 +225,6 @@ public class MenuUtilizadorRegistado {
         }
     }
 
-    /**
-     * FIX 2: Classificar um episódio específico de uma série.
-     */
     private void classificarEpisodio(Serie s) {
         System.out.println("Temporadas disponíveis:");
         for (Temporada t : s.getTemporadas()) {

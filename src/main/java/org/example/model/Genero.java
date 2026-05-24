@@ -89,10 +89,6 @@ public class Genero implements Serializable {
         return sb.toString();
     }
 
-    /**
-     * Devolve o género correspondente ao índice (1-based).
-     * @throws IllegalArgumentException se o índice for inválido
-     */
     public static Genero porIndice(int indice) {
         if (indice < 1 || indice > GENEROS.size()) {
             throw new IllegalArgumentException("Índice de género inválido: " + indice);

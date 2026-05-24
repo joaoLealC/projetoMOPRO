@@ -61,7 +61,6 @@ public class MenuInicial {
                     break;
                 }
             } else if (opcao.equals("0")) {
-                // FIX 1: Grava sempre ao sair do menu principal
                 imdb.gravarFicheiro();
             } else {
                 System.out.println("Opção inválida");

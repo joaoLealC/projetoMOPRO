@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Representa um episódio individual de uma temporada.
- */
 public class Episodio implements MarcavelComoVisto, Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -14,7 +11,6 @@ public class Episodio implements MarcavelComoVisto, Serializable {
     private String titulo;
     private int duracao;
 
-    // FIX 2: Episódio agora tem as suas próprias classificações e comentários
     private List<Classificacao> classificacoes;
     private List<Comentario> comentarios;
 
@@ -32,16 +28,11 @@ public class Episodio implements MarcavelComoVisto, Serializable {
     public List<Classificacao> getClassificacoes() { return classificacoes; }
     public List<Comentario> getComentarios() { return comentarios; }
 
-    /**
-     * Adiciona uma classificação ao episódio.
-     * FIX 3 + 4: Valida se já classificou e se já viu o episódio.
-     */
+
     public void adicionarClassificacao(Espectador espectador, int estrelas) throws Exception {
-        // FIX 4: Verificar se já viu
         if (!espectador.getEpisodiosVistos().contains(this)) {
             throw new Exception("Só pode classificar episódios que já viu!");
         }
-        // FIX 3: Verificar se já classificou
         for (Classificacao c : classificacoes) {
             if (c.getAutor().equals(espectador)) {
                 throw new Exception("Já classificou este episódio anteriormente!");

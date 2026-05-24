@@ -4,9 +4,6 @@ import org.example.model.*;
 import org.example.utils.Utils;
 import java.util.List;
 
-/**
- * Menu para gestão de recursos visuais (Filmes e Séries).
- */
 public class MenuGerirRecursos {
     private DB imdb;
     private String opcao;
@@ -105,13 +102,8 @@ public class MenuGerirRecursos {
         }
     }
 
-    /**
-     * Configura géneros e atores de um recurso visual.
-     * Garante que pelo menos 1 género e 1 ator são adicionados.
-     * @return true se configurado com sucesso, false se cancelado
-     */
     private boolean configurarRecurso(RecursoVisual rv) {
-        // --- Géneros (obrigatório pelo menos 1) ---
+        // Generos
         System.out.println("\n" + Genero.listarGenerosValidos());
         System.out.println("Adicione pelo menos 1 género (0 para terminar):");
         while (true) {
@@ -140,7 +132,7 @@ public class MenuGerirRecursos {
             }
         }
 
-        // --- Atores (obrigatório pelo menos 1) ---
+        // Atores
         System.out.println("\nAdicione pelo menos 1 ator ao elenco (deixe em branco para terminar):");
         while (true) {
             System.out.println(imdb.listarAtores());
@@ -154,7 +146,7 @@ public class MenuGerirRecursos {
                         return false;
                     }
                 } else {
-                    break; // tem atores suficientes, sai do loop
+                    break; // tem atores suficientes
                 }
             } else {
                 Ator ator = imdb.pesquisaAtor(nomeAtor);

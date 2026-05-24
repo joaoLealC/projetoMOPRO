@@ -2,9 +2,6 @@ package org.example.model;
 
 import java.io.Serializable;
 
-/**
- * Representa um comentário em texto escrito por um espetador.
- */
 public class Comentario implements Serializable {
     private static final long serialVersionUID = 1L;
     private Espectador autor;

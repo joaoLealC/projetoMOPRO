@@ -3,9 +3,7 @@ package org.example.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Representa uma Série constituída por várias temporadas.
- */
+
 public class Serie extends RecursoVisual {
     private static final long serialVersionUID = 1L;
     private List<Temporada> temporadas;
@@ -49,10 +47,6 @@ public class Serie extends RecursoVisual {
         return "Bom";
     }
 
-    /**
-     * FIX 4: Uma série considera-se "vista" se o espectador viu pelo menos um episódio.
-     * Podes ajustar esta lógica se quiseres (ex: todos os episódios vistos).
-     */
     @Override
     public boolean isVistoPorEspectador(Espectador espectador) {
         for (Temporada t : temporadas) {
