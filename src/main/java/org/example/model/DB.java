@@ -1,148 +1,113 @@
 package org.example.model;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DB {
-    private String url;
+/**
+ * Representa a Base de Dados em memória do sistema.
+ * Implementa Serializable para permitir guardar e carregar todo o estado da aplicação.
+ */
+public class DB implements Serializable {
+    private static final long serialVersionUID = 1L;
 
+    private String url;
     private List<UtilizadorRegistado> lstUtilizadores;
     private List<Ator> lstAtores;
-    private List<Filme> lstFilmes;
-    private List<Serie> lstSeries;
+    private List<RecursoVisual> lstRecursos;
 
+    /**
+     * Constrói uma nova DB com o caminho do ficheiro de persistência.
+     * @param url caminho do ficheiro de dados
+     */
     public DB(String url) {
         this.url = url;
         this.lstAtores = new ArrayList<>();
         this.lstUtilizadores = new ArrayList<>();
-        this.lstFilmes = new ArrayList<>();
-        this.lstSeries = new ArrayList<>();
+        this.lstRecursos = new ArrayList<>();
     }
 
-    public List<UtilizadorRegistado> getLstUtilizadores() {
-        return this.lstUtilizadores;
-    }
-    public List<Ator> getLstAtores() {
-        return this.lstAtores;
-    }
-    public List<Filme> getLstFilmes() {
-        return this.lstFilmes;
-    }
-    public List<Serie> getLstSeries() {
-        return this.lstSeries;
-    }
+    // --- Gestão de Atores ---
 
     public void adicionarAtor(Ator a) {
         this.lstAtores.add(a);
-    }
-
-    public void adicionarUtilizador(UtilizadorRegistado u) {
-        this.lstUtilizadores.add(u);
     }
 
     public void removerAtor(Ator ator) {
         lstAtores.remove(ator);
     }
 
-    // --- Gestão de Filmes e Séries ---
-
-    public void adicionarFilme(Filme f) {
-        if (pesquisaFilme(f.getTitulo(), f.getAno()) == null) {
-            this.lstFilmes.add(f);
-        } else {
-            throw new IllegalArgumentException("O filme já existe na base de dados.");
+    public Ator pesquisaAtor(String nome) {
+        for (Ator a : lstAtores) {
+            if (a.temNome(nome)) return a;
         }
+        return null;
     }
 
-    public void adicionarSerie(Serie s) {
-        if (pesquisaSerie(s.getTitulo(), s.getAno()) == null) {
-            this.lstSeries.add(s);
-        } else {
-            throw new IllegalArgumentException("A série já existe na base de dados.");
-        }
+    public List<Ator> getLstAtores() {
+        return this.lstAtores;
     }
 
-    public void removerFilme(Filme f) {
-        lstFilmes.remove(f);
-    }
+    // --- Gestão de Utilizadores ---
 
-    public void removerSerie(Serie s) {
-        lstSeries.remove(s);
+    public void adicionarUtilizador(UtilizadorRegistado u) {
+        this.lstUtilizadores.add(u);
     }
-
-    // --- Pesquisas ---
 
     public UtilizadorRegistado pesquisaUtilizador(String username) {
         for (UtilizadorRegistado u : lstUtilizadores) {
-            if (u.temNome(username)) {
-                return u;
-            }
+            if (u.temNome(username)) return u;
         }
         return null;
     }
-
-    public Ator pesquisaAtor(String nome) {
-        for (Ator a : lstAtores) {
-            if (a.temNome(nome)) {
-                return a;
-            }
-        }
-        return null;
-    }
-
-    public Filme pesquisaFilme(String titulo) {
-        for (Filme f : lstFilmes) {
-            if (f.correspondePesquisa(titulo)) {
-                return f;
-            }
-        }
-        return null;
-    }
-
-    public Serie pesquisaSerie(String titulo) {
-        for (Serie s : lstSeries) {
-            if (s.correspondePesquisa(titulo)) {
-                return s;
-            }
-        }
-        return null;
-    }
-
-    private Filme pesquisaFilme(String titulo, int ano) {
-        for (Filme f : lstFilmes) {
-            if (f.getTitulo().equalsIgnoreCase(titulo) && f.getAno() == ano) {
-                return f;
-            }
-        }
-        return null;
-    }
-
-    private Serie pesquisaSerie(String titulo, int ano) {
-        for (Serie s : lstSeries) {
-            if (s.getTitulo().equalsIgnoreCase(titulo) && s.getAno() == ano) {
-                return s;
-            }
-        }
-        return null;
-    }
-
-
-
-    // --- Autenticação ---
 
     public UtilizadorRegistado login(String username, String password) {
         UtilizadorRegistado ur = pesquisaUtilizador(username);
-        if (ur != null && ur.temPassord(password)) {
-            return ur;
-        }
+        if (ur != null && ur.temPassord(password)) return ur;
         return null;
     }
 
-    // --- Listagens e toString ---
+    // --- Gestão de Recursos ---
+
+    /**
+     * Adiciona um recurso visual à base de dados.
+     * Regra: não podem existir duplicados com o mesmo título e ano.
+     * @throws Exception se já existir um recurso com o mesmo título e ano
+     */
+    public void adicionarRecurso(RecursoVisual r) throws Exception {
+        for (RecursoVisual rv : lstRecursos) {
+            if (rv.getTitulo().equalsIgnoreCase(r.getTitulo())
+                    && rv.getAno() == r.getAno()) {
+                throw new Exception("Já existe um recurso com o título '"
+                        + r.getTitulo() + "' e ano " + r.getAno() + ".");
+            }
+        }
+        this.lstRecursos.add(r);
+    }
+
+    public void removerRecurso(RecursoVisual r) {
+        this.lstRecursos.remove(r);
+    }
+
+    public List<RecursoVisual> getLstRecursos() {
+        return lstRecursos;
+    }
+
+    /**
+     * Pesquisa recursos cujo título contenha o texto especificado.
+     */
+    public List<RecursoVisual> pesquisaRecursos(String titulo) {
+        List<RecursoVisual> resultados = new ArrayList<>();
+        for (RecursoVisual rv : lstRecursos) {
+            if (rv.correspondePesquisa(titulo)) resultados.add(rv);
+        }
+        return resultados;
+    }
+
+    // --- Listagens ---
 
     public String listarUtilizadores() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\nLista de Utilizadores:");
+        StringBuilder sb = new StringBuilder("\nLista de Utilizadores:");
         if (lstUtilizadores.isEmpty()) {
             sb.append(" (VAZIA)\n");
         } else {
@@ -154,8 +119,7 @@ public class DB {
     }
 
     public String listarAtores() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\nLista de Atores:");
+        StringBuilder sb = new StringBuilder("\nLista de Atores:");
         if (lstAtores.isEmpty()) {
             sb.append(" (VAZIA)\n");
         } else {
@@ -166,88 +130,16 @@ public class DB {
         return sb.toString();
     }
 
-    public String listarFilmes() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\nLista de Filmes:");
-        if (lstFilmes.isEmpty()) {
+    public String listarRecursos() {
+        StringBuilder sb = new StringBuilder("\nLista de Filmes e Séries:");
+        if (lstRecursos.isEmpty()) {
             sb.append(" (VAZIA)\n");
         } else {
-            for (Filme f : lstFilmes) {
-                sb.append("\n\t- ").append(f);
+            for (RecursoVisual rv : lstRecursos) {
+                sb.append("\n\t- ").append(rv);
             }
         }
         return sb.toString();
-    }
-
-    public String listarSeries() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\nLista de Séries:");
-        if (lstSeries.isEmpty()) {
-            sb.append(" (VAZIA)\n");
-        } else {
-            for (Serie s : lstSeries) {
-                sb.append("\n\t- ").append(s);
-            }
-        }
-        return sb.toString();
-    }
-
-    public Filme getFilme(String titulo, int ano) {
-        return pesquisaFilme(titulo, ano); // Reaproveita o teu método private existente!
-    }
-
-    // 2. Pesquisa parcial que devolve uma LISTA de filmes encontrados (Requisito do Menu)
-    public ArrayList<Filme> pesquisarFilmesPorTitulo(String termo) {
-        ArrayList<Filme> resultados = new ArrayList<>();
-        for (Filme f : lstFilmes) {
-            // Se o título do filme contiver o termo digitado (ignorando maiúsculas/minúsculas)
-            if (f.getTitulo().toLowerCase().contains(termo.toLowerCase())) {
-                resultados.add(f);
-            }
-        }
-        return resultados;
-    }
-
-    // 3. Pesquisa parcial que devolve uma LISTA de séries encontradas (Requisito do Menu)
-    public ArrayList<Serie> pesquisarSeriesPorTitulo(String termo) {
-        ArrayList<Serie> resultados = new ArrayList<>();
-        for (Serie s : lstSeries) {
-            if (s.getTitulo().toLowerCase().contains(termo.toLowerCase())) {
-                resultados.add(s);
-            }
-        }
-        return resultados;
-    }
-
-    // Devolve a lista ordenada alfabeticamente para o Menu imprimir
-    public ArrayList<Filme> listarFilmesPorNome() {
-        if (lstFilmes.isEmpty()) {
-            System.out.println("Não existem filmes registados no sistema.");
-            return null;
-        }
-        ArrayList<Filme> copia = new ArrayList<>(lstFilmes);
-        copia.sort((f1, f2) -> f1.getTitulo().compareToIgnoreCase(f2.getTitulo()));
-
-        System.out.println("\n--- FILMES POR ORDEM ALFABÉTICA ---");
-        for (Filme f : copia) {
-            System.out.println("- " + f.getTitulo() + " (" + f.getAno() + ")");
-        }
-        return copia;
-    }
-
-    // Devolve a lista ordenada por nota para o Menu imprimir
-    public ArrayList<Filme> listarFilmesPorClassificacao() {
-        if (lstFilmes.isEmpty()) {
-            System.out.println("Não existem filmes registados no sistema.");
-            return null;
-        }
-        ArrayList<Filme> copia = new ArrayList<>(lstFilmes);
-
-        System.out.println("\n--- FILMES POR CLASSIFICAÇÃO MÉDIA ---");
-        for (Filme f : copia) {
-            System.out.println("- " + f.getTitulo() + " (" + f.getAno() + ")");
-        }
-        return copia;
     }
 
     @Override
@@ -256,8 +148,97 @@ public class DB {
         sb.append("(").append(url).append(")");
         sb.append(listarUtilizadores());
         sb.append(listarAtores());
-        sb.append(listarFilmes());
-        sb.append(listarSeries());
+        sb.append(listarRecursos());
         return sb.toString();
+    }
+
+    // --- Serialização ---
+
+    /**
+     * Grava o estado completo da DB num ficheiro binário.
+     */
+    public void gravarFicheiro() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(this.url))) {
+            oos.writeObject(this);
+            System.out.println("Base de dados gravada com sucesso em: " + this.url);
+        } catch (IOException e) {
+            System.out.println("Erro ao gravar a base de dados: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Carrega o estado da DB a partir de um ficheiro binário.
+     */
+    public static DB carregarFicheiro(String urlFicheiro) {
+        File f = new File(urlFicheiro);
+        if (!f.exists()) {
+            System.out.println("Ficheiro não encontrado. Nova base de dados criada.");
+            return new DB(urlFicheiro);
+        }
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(urlFicheiro))) {
+            DB dbCarregada = (DB) ois.readObject();
+            System.out.println("Base de dados carregada de: " + urlFicheiro);
+            return dbCarregada;
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Erro ao carregar ficheiro. Nova DB criada. Detalhe: " + e.getMessage());
+            return new DB(urlFicheiro);
+        }
+    }
+
+    // --- Ordenações ---
+
+    private List<Filme> obterApenasFilmes() {
+        List<Filme> filmes = new ArrayList<>();
+        for (RecursoVisual rv : lstRecursos) {
+            if (rv instanceof Filme) filmes.add((Filme) rv);
+        }
+        return filmes;
+    }
+
+    /** Lista filmes ordenados por título (A-Z). */
+    public List<Filme> listarFilmesPorTitulo() {
+        List<Filme> filmes = obterApenasFilmes();
+        filmes.sort((f1, f2) -> f1.getTitulo().compareToIgnoreCase(f2.getTitulo()));
+        return filmes;
+    }
+
+    /** Lista filmes ordenados por classificação média (maior para menor). */
+    public List<Filme> listarFilmesPorClassificacaoMedia() {
+        List<Filme> filmes = obterApenasFilmes();
+        filmes.sort((f1, f2) -> Double.compare(f2.calcularClassificacaoMedia(), f1.calcularClassificacaoMedia()));
+        return filmes;
+    }
+
+    /** Lista atores ordenados por nome (A-Z). */
+    public List<Ator> listarAtoresPorNome() {
+        List<Ator> atores = new ArrayList<>(lstAtores);
+        atores.sort((a1, a2) -> a1.getNome().compareToIgnoreCase(a2.getNome()));
+        return atores;
+    }
+
+    /** Conta em quantos filmes um ator participa. */
+    public int contarFilmesDoAtor(Ator ator) {
+        int contador = 0;
+        for (Filme f : obterApenasFilmes()) {
+            if (f.getElenco().contains(ator)) contador++;
+        }
+        return contador;
+    }
+
+    /** Lista atores ordenados por número de filmes (maior para menor). */
+    public List<Ator> listarAtoresPorNumeroDeFilmes() {
+        List<Ator> atores = new ArrayList<>(lstAtores);
+        atores.sort((a1, a2) -> Integer.compare(contarFilmesDoAtor(a2), contarFilmesDoAtor(a1)));
+        return atores;
+    }
+
+    /** Lista espectadores ordenados por número de filmes vistos (maior para menor). */
+    public List<Espectador> listarUtilizadoresPorFilmesVistos() {
+        List<Espectador> espectadores = new ArrayList<>();
+        for (UtilizadorRegistado u : lstUtilizadores) {
+            if (u instanceof Espectador) espectadores.add((Espectador) u);
+        }
+        espectadores.sort((e1, e2) -> Integer.compare(e2.getFilmesVistos().size(), e1.getFilmesVistos().size()));
+        return espectadores;
     }
 }

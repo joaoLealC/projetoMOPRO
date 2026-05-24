@@ -3,68 +3,56 @@ package org.example.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe que representa um utilizador do tipo Espectador na plataforma.
+ */
 public class Espectador extends UtilizadorRegistado {
 
-    // ADICIONADO: Histórico pessoal de filmes e séries vistos por ESTE espectador
+    private List<RecursoVisual> listaPessoal;
     private List<Filme> filmesVistos;
-    private List<Serie> seriesVistas;
+    private List<Episodio> episodiosVistos;
 
     public Espectador(String email, String nome, String password) {
         super(email, nome, password);
-        // Inicializa as listas para evitar NullPointerException
+        this.listaPessoal = new ArrayList<>();
         this.filmesVistos = new ArrayList<>();
-        this.seriesVistas = new ArrayList<>();
+        this.episodiosVistos = new ArrayList<>();
     }
 
-    // --- GETTERS (ADICIONADOS) ---
-    public List<Filme> getFilmesVistos() {
-        return this.filmesVistos;
+    public List<RecursoVisual> getListaPessoal() { return this.listaPessoal; }
+    public List<Filme> getFilmesVistos() { return this.filmesVistos; }
+    public List<Episodio> getEpisodiosVistos() { return this.episodiosVistos; }
+
+    public void adicionarFilmeVisto(Filme filme) {
+        if (!this.filmesVistos.contains(filme)) this.filmesVistos.add(filme);
     }
 
-    public List<Serie> getSeriesVistas() {
-        return this.seriesVistas;
+    public void adicionarEpisodioVisto(Episodio episodio) {
+        if (!this.episodiosVistos.contains(episodio)) this.episodiosVistos.add(episodio);
     }
 
-    // --- MÉTODOS DE HISTÓRICO (ADICIONADOS) ---
-
-    /**
-     * Adiciona um filme ao histórico do espectador e marca o filme como visto.
-     * @param f O filme a ser adicionado.
-     */
-    public void registarFilmeVisto(Filme f) {
-        if (f != null && !filmesVistos.contains(f)) {
-            this.filmesVistos.add(f);
-            f.marcarComoVisto(); // Ativa a flag no próprio filme se necessário
-        }
+    public void adicionarAListaPessoal(RecursoVisual recurso) {
+        if (!this.listaPessoal.contains(recurso)) this.listaPessoal.add(recurso);
     }
 
-    /**
-     * Adiciona uma série ao histórico do espectador.
-     * @param s A série a ser adicionada.
-     */
-    public void registarSerieVista(Serie s) {
-        if (s != null && !seriesVistas.contains(s)) {
-            this.seriesVistas.add(s);
-        }
+    public void removerDaListaPessoal(RecursoVisual recurso) {
+        this.listaPessoal.remove(recurso);
     }
 
     /**
-     * Verifica se este espectador já viu um determinado filme.
+     * FIX 3: equals necessário para que "c.getAutor().equals(espectador)" funcione
+     * corretamente na verificação de classificação duplicada.
      */
-    public boolean jaViuFilme(Filme f) {
-        return registrosContemFilme(f) || (f != null && f.estaVisto());
-    }
-
-    private boolean registrosContemFilme(Filme f) {
-        return filmesVistos.contains(f);
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Espectador outro = (Espectador) obj;
+        return this.temNome(outro.toString().split(" <")[0]);
     }
 
     @Override
     public String toString() {
-        return super.toString() + " | Filmes Vistos: " + CleanListSize(filmesVistos);
-    }
-
-    private int CleanListSize(List<?> list) {
-        return list == null ? 0 : list.size();
+        return super.toString() + " [Perfil: Espectador]";
     }
 }
